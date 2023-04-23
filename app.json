@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hit7.signgoogle"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hit7.signgoogle"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "scheme": "hiver",
+    "extra": {
+      "eas": {
+        "projectId": "2815b27f-2e0d-42b6-b40b-45b147922b78"
+      }
     }
   }
 }
