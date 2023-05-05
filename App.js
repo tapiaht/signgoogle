@@ -1,17 +1,22 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+// import 'react-native-gesture-handler';
+import { useEffect, useState,createRef } from "react";
+import { StyleSheet, Text, View, Button, Image,SafeAreaView, StatusBar } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from '@react-navigation/native'
+import  DrawerNavigator  from './src/navigation/DrawerNavigator'
 
 WebBrowser.maybeCompleteAuthSession();
-
+const navigationRef = createRef()
+const nav = () => navigationRef.current
 export default function App() {
   const [token, setToken] = useState("");
   const [userInfo, setUserInfo] = useState(null);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: "554981802634-d6oce6ff2inrmud50qfluob21bjotirp.apps.googleusercontent.com",
+    expoClientId: "554981802634-d6oce6ff2inrmud50qfluob21bjotirp.apps.googleusercontent.com",
     iosClientId: "",
     webClientId: "554981802634-374eh662oofq2i6sraq6rjc8kjndr5c3.apps.googleusercontent.com",
   });
@@ -59,17 +64,26 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+    {/* <View style={styles.container}> */}
       {!userInfo ? (
         <Button
-          title="Sign in with Google"
+          title="Iniciar Session Google"
           disabled={!request}
           onPress={() => {
             promptAsync();
           }}
         />
+        
       ) : (
-        <View style={styles.card}>
+        
+        <View style={styles.safeArea}>
+         
+         
+      
+      <StatusBar barStyle="dark-content" />
+      <NavigationContainer ref={navigationRef}>
+          <DrawerNavigator nav={nav} />
           {userInfo?.picture && (
             <Image source={{ uri: userInfo?.picture }} style={styles.image} />
           )}
@@ -78,14 +92,21 @@ export default function App() {
             Verified: {userInfo.verified_email ? "yes" : "no"}
           </Text>
           <Text style={styles.text}>Name: {userInfo.name}</Text>
-          {/* <Text style={styles.text}>{JSON.stringify(userInfo, null, 2)}</Text> */}
-        </View>
-      )}
+      </NavigationContainer>
       <Button
-        title="remove local store"
-        onPress={async () => await AsyncStorage.removeItem("@user")}
-      />
-    </View>
+        title="Cerrar Sesion"
+        onPress={async () =>{ await AsyncStorage.removeItem("@user")
+        promptAsync()
+      }}
+      /> 
+      </View>
+        
+      )}
+      
+      
+    
+    {/* </View> */}
+     </SafeAreaView>
   );
 }
 
@@ -95,6 +116,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    padding: 10,
+  },
+  safeArea: {
+    flex: 1,
+    overflow: 'hidden',
   },
   text: {
     fontSize: 20,
@@ -111,3 +137,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 });
+
+// "start": "expo start --dev-client",
+// npx expo start --dev-client
