@@ -140,3 +140,5 @@ const styles = StyleSheet.create({
 
 // "start": "expo start --dev-client",
 // npx expo start --dev-client
+// yarn cache clean
+//eas build --platform android
